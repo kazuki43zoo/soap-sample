@@ -1,8 +1,9 @@
-package soap.domain.service.todo;
+package soap.ws.todo;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import soap.domain.model.Todo;
+import soap.domain.service.todo.TodoService;
 
 import javax.inject.Inject;
 import javax.jws.WebMethod;

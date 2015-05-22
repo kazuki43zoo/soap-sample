@@ -13,6 +13,8 @@
     <context:property-placeholder
         location="classpath*:/META-INF/spring/*.properties" />
 
+    <context:component-scan base-package="soap.ws" />
+
     <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
         <property name="mappingFiles"
             value="classpath*:/META-INF/dozer/**/*-mapping.xml" />
@@ -53,6 +55,10 @@
     <bean id="exceptionLoggingFilter"
         class="org.terasoluna.gfw.web.exception.ExceptionLoggingFilter" >
         <property name="exceptionLogger" ref="exceptionLogger" />
+    </bean>
+
+    <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
+        <property name="baseAddress" value="http://localhost:8081/"/>
     </bean>
 
 </beans>

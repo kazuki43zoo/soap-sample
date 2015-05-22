@@ -23,8 +23,4 @@
             pointcut="@within(org.springframework.stereotype.Service)" />
     </aop:config>
 
-    <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
-        <property name="baseAddress" value="http://localhost:8081/"/>
-    </bean>
-
 </beans>

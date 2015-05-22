@@ -51,7 +51,7 @@ public class TodoClientTest {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
             factoryBean.setServiceInterface(TodoService.class);
             factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:8081/TodoService?WSDL"));
-            factoryBean.setNamespaceUri("http://todo.service.domain.soap/");
+            factoryBean.setNamespaceUri("http://todo.ws.soap/");
             factoryBean.setServiceName("TodoService");
             factoryBean.setPortName("TodoWebServicePort");
             return factoryBean;
