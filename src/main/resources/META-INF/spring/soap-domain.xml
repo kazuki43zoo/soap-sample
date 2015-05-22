@@ -23,16 +23,8 @@
             pointcut="@within(org.springframework.stereotype.Service)" />
     </aop:config>
 
-    <!--<bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">-->
-        <!--<property name="hostname" value="localhost" />-->
-        <!--<property name="port" value="8081" />-->
-    <!--</bean>-->
-
     <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
         <property name="baseAddress" value="http://localhost:8081/"/>
     </bean>
-
-    <!--<bean id="todoWebService" class="soap.domain.service.todo.TodoWebService" />-->
-
 
 </beans>
