@@ -57,8 +57,21 @@
         <property name="exceptionLogger" ref="exceptionLogger" />
     </bean>
 
-    <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
-        <property name="baseAddress" value="http://localhost:8081/"/>
+    <!--<bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">-->
+        <!--<property name="baseAddress" value="http://localhost:8081/"/>-->
+    <!--</bean>-->
+
+    <bean class="org.springframework.remoting.jaxws.SimpleHttpServerJaxWsServiceExporter">
+        <property name="port" value="8081" />
     </bean>
+
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
+        <property name="validator" ref="validator" />
+    </bean>
+
 
 </beans>

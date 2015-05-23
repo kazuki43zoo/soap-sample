@@ -4,9 +4,11 @@ import soap.domain.model.Todo;
 
 import javax.jws.WebService;
 
-@WebService(targetNamespace = "http://todo.ws.soap/")
+@WebService
 public interface TodoService {
 
     Todo getTodo(String todoId);
+
+    Todo create(Todo todo);
 
 }

@@ -2,6 +2,7 @@ package soap.domain.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 public class Todo implements Serializable {
 
     private String todoId;
+    @NotNull
     private String title;
     private String description;
     private boolean finished;

@@ -25,19 +25,38 @@ public class TodoClientTest {
     TodoService todoService;
 
     @Test
-    public void getTodo() {
-        Todo todo = todoService.getTodo("test");
-        System.out.println(todo.getTodoId());
-        System.out.println(todo.getDescription());
-        System.out.println(todo.getCreatedAt());
-        System.out.println(todo.isFinished());
+    public void createAndGetTodo() {
+        Todo todo = new Todo();
+        todo.setTitle("test title");
+        todo.setDescription("test description");
+        Todo createdTodo = todoService.create(todo);
+        System.out.println(createdTodo.getTodoId());
+        System.out.println(createdTodo.getDescription());
+        System.out.println(createdTodo.getCreatedAt());
+        System.out.println(createdTodo.isFinished());
+        System.out.println("-----");
+        Todo loadedTodo = todoService.getTodo(createdTodo.getTodoId());
+        System.out.println(loadedTodo.getTodoId());
+        System.out.println(loadedTodo.getDescription());
+        System.out.println(loadedTodo.getCreatedAt());
+        System.out.println(loadedTodo.isFinished());
+    }
+
+    @Test
+    public void validationErrorOnCreateTodo() {
+        Todo todo = new Todo();
+        todo.setDescription("test description");
+        try {
+            todoService.create(todo);
+        } catch (JaxWsSoapFaultException e) {
+            System.out.println(e.getFault().getFaultString());
+        }
     }
 
     @Test
     public void getTodoSystemError() {
         try {
             todoService.getTodo("systemError");
-
         } catch (JaxWsSoapFaultException e) {
             System.out.println(e.getFault().getFaultString());
         }
@@ -51,7 +70,7 @@ public class TodoClientTest {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
             factoryBean.setServiceInterface(TodoService.class);
             factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:8081/TodoService?WSDL"));
-            factoryBean.setNamespaceUri("http://todo.ws.soap/");
+            factoryBean.setNamespaceUri("http://todo.service.domain.soap/");
             factoryBean.setServiceName("TodoService");
             factoryBean.setPortName("TodoWebServicePort");
             return factoryBean;
