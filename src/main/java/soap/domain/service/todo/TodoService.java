@@ -1,14 +1,18 @@
 package soap.domain.service.todo;
 
+import org.springframework.validation.annotation.Validated;
 import soap.domain.model.Todo;
+import soap.ws.todo.ValidationException;
 
-import javax.jws.WebService;
+import javax.validation.Valid;
+import javax.validation.groups.Default;
 
-@WebService
+@Validated
 public interface TodoService {
 
     Todo getTodo(String todoId);
 
-    Todo create(Todo todo);
+    @Validated({Default.class, Todo.Create.class})
+    Todo create(@Valid Todo todo);
 
 }

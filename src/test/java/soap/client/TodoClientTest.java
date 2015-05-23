@@ -10,8 +10,11 @@ import org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean;
 import org.springframework.remoting.jaxws.JaxWsSoapFaultException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.validation.BindException;
 import soap.domain.model.Todo;
 import soap.domain.service.todo.TodoService;
+import soap.ws.todo.TodoWebService;
+import soap.ws.todo.ValidationException;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -22,10 +25,10 @@ import java.net.MalformedURLException;
 public class TodoClientTest {
 
     @Inject
-    TodoService todoService;
+    TodoWebService todoService;
 
     @Test
-    public void createAndGetTodo() {
+    public void createAndGetTodo() throws ValidationException {
         Todo todo = new Todo();
         todo.setTitle("test title");
         todo.setDescription("test description");
@@ -43,14 +46,21 @@ public class TodoClientTest {
     }
 
     @Test
-    public void validationErrorOnCreateTodo() {
+    public void validationErrorOnCreateTodo() throws ValidationException {
         Todo todo = new Todo();
+        todo.setTodoId("sfasdf");
+        todo.setTitle("test title");
         todo.setDescription("test description");
         try {
+            System.out.println("--------------1------------");
             todoService.create(todo);
-        } catch (JaxWsSoapFaultException e) {
-            System.out.println(e.getFault().getFaultString());
+            System.out.println("--------------2------------");
+        } catch (ValidationException e) {
+            System.out.println("--------------3------------");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+        System.out.println("------------4--------------");
     }
 
     @Test
@@ -58,7 +68,7 @@ public class TodoClientTest {
         try {
             todoService.getTodo("systemError");
         } catch (JaxWsSoapFaultException e) {
-            System.out.println(e.getFault().getFaultString());
+            e.printStackTrace();
         }
     }
 
@@ -68,11 +78,11 @@ public class TodoClientTest {
         @Bean
         public JaxWsPortProxyFactoryBean todoService() throws IOException {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
-            factoryBean.setServiceInterface(TodoService.class);
+            factoryBean.setServiceInterface(TodoWebService.class);
             factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:8081/TodoService?WSDL"));
-            factoryBean.setNamespaceUri("http://todo.service.domain.soap/");
+            factoryBean.setNamespaceUri("http://todo.ws.soap/");
             factoryBean.setServiceName("TodoService");
-            factoryBean.setPortName("TodoWebServicePort");
+            factoryBean.setPortName("TodoServicePort");
             return factoryBean;
         }
 

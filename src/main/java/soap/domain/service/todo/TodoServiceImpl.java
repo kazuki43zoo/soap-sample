@@ -8,11 +8,12 @@ import soap.domain.model.Todo;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Validated
 @Transactional
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -29,8 +30,8 @@ public class TodoServiceImpl implements TodoService {
         return todos.get(todoId);
     }
 
-    @Override
-    public Todo create(@Valid Todo todo) {
+
+    public Todo create(@Valid  Todo todo) {
         todo.setTodoId(UUID.randomUUID().toString());
         todo.setCreatedAt(dateFactory.newDate());
         todos.put(todo.getTodoId(), todo);
