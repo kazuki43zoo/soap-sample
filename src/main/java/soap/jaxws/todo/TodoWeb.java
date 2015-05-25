@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 @WebService
 @HandlerChain(file = "/META-INF/ws/handlers.xml")
-public class TodoWeb extends SpringBeanAutowiringSupport {
+public class TodoWeb /*extends SpringBeanAutowiringSupport */{
 
     @Inject
     TodoService todoService;
