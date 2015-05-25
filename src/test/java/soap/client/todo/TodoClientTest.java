@@ -4,12 +4,16 @@ import com.sun.net.httpserver.Headers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.UrlResource;
 import org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean;
 import org.springframework.remoting.jaxws.JaxWsSoapFaultException;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import soap.client.WsBusinessException;
 import soap.client.WsError;
@@ -144,19 +148,23 @@ public class TodoClientTest {
     }
 
     @Configuration
+    @TestPropertySource(locations = "test.properties")
     static class TestConfig {
         @Bean
-        public JaxWsPortProxyFactoryBean todoService() throws IOException {
+        public JaxWsPortProxyFactoryBean todoService(@Value("${jaxws.portNumber:8081}") String portNumber) throws IOException {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
             factoryBean.setServiceInterface(TodoService.class);
-            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:4444/TodoWebService?WSDL"));
+            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/TodoWebService?WSDL"));
             factoryBean.setNamespaceUri("http://todo.jaxws.soap/");
             factoryBean.setServiceName("TodoWebService");
             factoryBean.setPortName("TodoWebPort");
             factoryBean.setHandlerResolver(new MyHandlerResolver());
-            factoryBean.setUsername("testuser");
-            factoryBean.setPassword("password");
             return factoryBean;
+        }
+
+        @Bean
+        public static PropertySourcesPlaceholderConfigurer placeholderConfigurer(){
+            return new PropertySourcesPlaceholderConfigurer();
         }
 
     }
