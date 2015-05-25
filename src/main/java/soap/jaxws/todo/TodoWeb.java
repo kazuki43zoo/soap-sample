@@ -2,26 +2,23 @@ package soap.jaxws.todo;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.terasoluna.gfw.common.exception.BusinessException;
 import org.terasoluna.gfw.common.exception.ResourceNotFoundException;
 import soap.domain.model.Todo;
 import soap.domain.service.todo.TodoService;
 import soap.jaxws.*;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.validation.groups.Default;
-import javax.xml.ws.WebServiceProvider;
 import java.util.List;
 
 @Component
 @WebService
 @HandlerChain(file = "/META-INF/ws/handlers.xml")
-public class TodoWeb /*extends SpringBeanAutowiringSupport */{
+public class TodoWeb /*extends SpringBeanAutowiringSupport */ {
 
     @Inject
     TodoService todoService;
@@ -80,12 +77,5 @@ public class TodoWeb /*extends SpringBeanAutowiringSupport */{
     public void deleteTodos() {
         todoService.deleteTodos();
     }
-
-
-    @PostConstruct
-    public void init() {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-    }
-
 
 }
