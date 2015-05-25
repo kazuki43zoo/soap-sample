@@ -9,6 +9,8 @@ import org.terasoluna.gfw.common.message.ResultMessages;
 import soap.domain.model.Todo;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,12 +23,16 @@ public class TodoServiceImpl implements TodoService {
 
     private final ConcurrentHashMap<String, Todo> todos = new ConcurrentHashMap();
 
+    public List<Todo> getTodos() {
+        return new ArrayList<>(todos.values());
+    }
+
     public Todo getTodo(String todoId) {
         if ("systemError".equals(todoId)) {
             throw new NullPointerException();
         }
         if (!todos.containsKey(todoId)) {
-            throw new ResourceNotFoundException(ResultMessages.error().add("e.xx.fw.5001",todoId));
+            throw new ResourceNotFoundException(ResultMessages.error().add("e.xx.fw.5001", todoId));
         }
         return todos.get(todoId);
     }
@@ -46,6 +52,16 @@ public class TodoServiceImpl implements TodoService {
         getTodo(todo.getTodoId());
         todos.put(todo.getTodoId(), todo);
         return todo;
+    }
+
+    @Override
+    public void deleteTodo(String todoId) {
+        todos.remove(todoId);
+    }
+
+    @Override
+    public void deleteTodos() {
+        todos.clear();
     }
 
 }

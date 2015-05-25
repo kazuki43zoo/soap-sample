@@ -1,6 +1,7 @@
 package soap.client.todo;
 
 import com.sun.net.httpserver.Headers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.remoting.jaxws.JaxWsSoapFaultException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import soap.client.WsBusinessException;
+import soap.client.WsError;
 import soap.client.WsResourceNotFoundException;
 import soap.client.WsValidationException;
 import soap.domain.model.Todo;
@@ -26,6 +28,10 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.io.IOException;
 import java.util.*;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class TodoClientTest {
@@ -33,85 +39,108 @@ public class TodoClientTest {
     @Inject
     TodoService todoService;
 
+    @Before
+    public void setup() {
+        System.out.println(todoService.getTodos());
+        todoService.deleteTodos();
+    }
+
     @Test
     public void createAndGetTodo() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
+        //test
         Todo todo = new Todo();
         todo.setTitle("テスト");
         todo.setDescription("test description");
         Todo createdTodo = todoService.createTodo(todo);
-        System.out.println(createdTodo.getTodoId());
-        System.out.println(createdTodo.getTitle());
-        System.out.println(createdTodo.getDescription());
-        System.out.println(createdTodo.getCreatedAt());
-        System.out.println(createdTodo.isFinished());
-        System.out.println("-----");
+
+        // assert
         Todo loadedTodo = todoService.getTodo(createdTodo.getTodoId());
-        System.out.println(loadedTodo.getTodoId());
-        System.out.println(createdTodo.getTitle());
-        System.out.println(loadedTodo.getDescription());
-        System.out.println(loadedTodo.getCreatedAt());
-        System.out.println(loadedTodo.isFinished());
+        assertThat(createdTodo.toString(), is(loadedTodo.toString()));
     }
 
     @Test
-    public void validationErrorOnCreateTodo() {
-        Todo todo = new Todo();
-        todo.setTodoId("sfasdf");
-        todo.setTitle("test title");
-        todo.setDescription("test description");
-        try {
-            System.out.println("--------------1------------");
-            todoService.createTodo(todo);
-            System.out.println("--------------2------------");
-        } catch (WsValidationException e) {
-            System.out.println("------------3--------------");
-            System.out.println(e.getFaultInfo().getErrors());
-            e.printStackTrace();
-        } catch (WsBusinessException e) {
-            System.out.println("------------4--------------");
-            e.printStackTrace();
-        }
-        System.out.println("------------5--------------");
-    }
-
-
-    @Test
-    public void updateAndGetTodo() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
+    public void update() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
+        // setup
         Todo todo = new Todo();
         todo.setTitle("test title");
         todo.setDescription("test description");
         Todo createdTodo = todoService.createTodo(todo);
+
+        // test
         createdTodo.setTitle("mod title");
         createdTodo.setDescription("mod description");
         createdTodo.setFinished(true);
-        System.out.println(createdTodo);
-        System.out.println(todoService.updateTodo(createdTodo));
-        ;
-        System.out.println("-----");
+        todoService.updateTodo(createdTodo);
+
+        // assert
         Todo loadedTodo = todoService.getTodo(createdTodo.getTodoId());
-        System.out.println(loadedTodo.getTodoId());
-        System.out.println(loadedTodo.getDescription());
-        System.out.println(loadedTodo.getCreatedAt());
-        System.out.println(loadedTodo.isFinished());
+        assertThat(createdTodo.toString(), is(loadedTodo.toString()));
     }
 
+    @Test(expected = WsResourceNotFoundException.class)
+    public void delete() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
+
+        // setup
+        Todo todo = new Todo();
+        todo.setTitle("test title");
+        todo.setDescription("test description");
+        Todo createdTodo = todoService.createTodo(todo);
+
+        // test
+        todoService.deleteTodo(createdTodo.getTodoId());
+
+        // assert
+        todoService.getTodo(createdTodo.getTodoId());
+    }
+
+    @Test(expected = WsBusinessException.class)
+    public void businessError() throws WsBusinessException, WsValidationException {
+        // test
+        Todo todo = new Todo();
+        todo.setTitle("test title");
+        todo.setDescription("test description");
+
+        todoService.createTodo(todo);
+        todoService.createTodo(todo);
+        todoService.createTodo(todo);
+        todoService.createTodo(todo);
+        todoService.createTodo(todo);
+        todoService.createTodo(todo);
+
+    }
+
+
     @Test
-    public void getTodoSystemError() throws WsValidationException, WsResourceNotFoundException {
+    public void validationError() throws WsBusinessException {
         try {
-            todoService.getTodo("systemError");
-        } catch (JaxWsSoapFaultException e) {
-            e.printStackTrace();
+            // test
+            Todo todo = new Todo();
+            todo.setTodoId("sfasdf");
+            todo.setTitle("test title");
+            todo.setDescription("test description");
+
+            todoService.createTodo(todo);
+
+            //assert
+            fail();
+        } catch (WsValidationException e) {
+            assertThat(e.getErrors().size(), is(1));
+            WsError error = e.getErrors().get(0);
+            assertThat(error.getCode(), is("Null"));
+            assertThat(error.getMessage(), is("must be null"));
+            assertThat(error.getPath(), is("todoId"));
         }
     }
 
-    @Test
-    public void getTodoNotFound() {
-        try {
-            todoService.getTodo("aaaa");
-        } catch (WsResourceNotFoundException e) {
-            System.out.println(e.getFaultInfo().getErrors());
-            e.printStackTrace();
-        }
+    @Test(expected = JaxWsSoapFaultException.class)
+    public void systemError() throws WsValidationException, WsResourceNotFoundException {
+        // test
+        todoService.getTodo("systemError");
+    }
+
+    @Test(expected = WsResourceNotFoundException.class)
+    public void notFound() throws WsResourceNotFoundException {
+        todoService.getTodo("aaaa");
     }
 
     @Configuration

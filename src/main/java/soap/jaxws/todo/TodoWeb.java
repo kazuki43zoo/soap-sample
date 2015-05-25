@@ -13,6 +13,7 @@ import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.validation.groups.Default;
+import java.util.List;
 
 @Component
 @WebService
@@ -27,6 +28,11 @@ public class TodoWeb {
 
     @Inject
     WsExceptionConverter exceptionConverter;
+
+    @WebMethod
+    public List<Todo> getTodos() {
+        return todoService.getTodos();
+    }
 
     @WebMethod
     public Todo getTodo(String todoId) throws WsResourceNotFoundException {
@@ -60,6 +66,16 @@ public class TodoWeb {
         } catch (ResourceNotFoundException e) {
             throw exceptionConverter.toWsResourceNotFoundException(e);
         }
+    }
+
+    @WebMethod
+    public void deleteTodo(String todoId) {
+        todoService.deleteTodo(todoId);
+    }
+
+    @WebMethod
+    public void deleteTodos() {
+        todoService.deleteTodos();
     }
 
 }
