@@ -36,7 +36,6 @@ public class TodoWeb /*extends SpringBeanAutowiringSupport */ {
 
     @WebMethod
     public Todo getTodo(String todoId) throws WsResourceNotFoundException {
-
         try {
             return todoService.getTodo(todoId);
         } catch (ResourceNotFoundException e) {
