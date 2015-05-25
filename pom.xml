@@ -115,17 +115,6 @@
             <artifactId>terasoluna-gfw-recommended-web-dependencies</artifactId>
             <type>pom</type>
         </dependency>
-        <!--  REMOVE THIS LINE IF YOU USE JPA
-        <dependency>
-            <groupId>org.terasoluna.gfw</groupId>
-            <artifactId>terasoluna-gfw-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-              REMOVE THIS LINE IF YOU USE JPA  -->
         <dependency>
             <groupId>org.terasoluna.gfw</groupId>
             <artifactId>terasoluna-gfw-mybatis3</artifactId>
@@ -171,6 +160,5 @@
             <artifactId>tomcat-embed-el</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

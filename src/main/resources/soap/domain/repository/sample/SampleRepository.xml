@@ -21,7 +21,7 @@
             finished,
             created_at
         FROM
-            todo
+            soap.springws
         WHERE
             todo_id = #{todoId}
     ]]>
@@ -35,13 +35,13 @@
             finished,
             created_at
         FROM
-            todo
+            soap.springws
     ]]>
     </select>
 
     <insert id="create" parameterType="Todo">
     <![CDATA[
-        INSERT INTO todo
+        INSERT INTO soap.springws
         (
             todo_id,
             todo_title,
@@ -61,7 +61,7 @@
     <update id="update" parameterType="Todo">
     <![CDATA[
         UPDATE
-            todo
+            soap.springws
         SET
             todo_title = #{todoTitle},
             finished = #{finished},
@@ -73,7 +73,7 @@
 
     <delete id="delete" parameterType="Todo">
     <![CDATA[
-        DELETE FROM todo
+        DELETE FROM soap.springws
         WHERE
             todo_id = #{todoId}
     ]]>
@@ -84,7 +84,7 @@
         SELECT
             COUNT(*)
         FROM
-            todo
+            soap.springws
         WHERE
             finished = #{finished}
     ]]>
@@ -95,7 +95,7 @@
         SELECT
             COUNT(*)
         FROM
-            todo
+            soap.springws
         WHERE
             todo_id = #{todoId}
     ]]>

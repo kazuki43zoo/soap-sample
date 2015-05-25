@@ -2,15 +2,13 @@ package soap.domain.service.todo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.terasoluna.gfw.common.date.jodatime.JodaTimeDateFactory;
+import org.terasoluna.gfw.common.exception.BusinessException;
+import org.terasoluna.gfw.common.exception.ResourceNotFoundException;
+import org.terasoluna.gfw.common.message.ResultMessages;
 import soap.domain.model.Todo;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.Default;
-import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,13 +25,25 @@ public class TodoServiceImpl implements TodoService {
         if ("systemError".equals(todoId)) {
             throw new NullPointerException();
         }
+        if (!todos.containsKey(todoId)) {
+            throw new ResourceNotFoundException(ResultMessages.error().add("e.xx.fw.5001",todoId));
+        }
         return todos.get(todoId);
     }
 
 
-    public Todo create(@Valid  Todo todo) {
+    public Todo createTodo(Todo todo) {
+        if (todos.size() == 5) {
+            throw new BusinessException(ResultMessages.error().add("e.xx.td.8001"));
+        }
         todo.setTodoId(UUID.randomUUID().toString());
         todo.setCreatedAt(dateFactory.newDate());
+        todos.put(todo.getTodoId(), todo);
+        return todo;
+    }
+
+    public Todo updateTodo(Todo todo) {
+        getTodo(todo.getTodoId());
         todos.put(todo.getTodoId(), todo);
         return todo;
     }
