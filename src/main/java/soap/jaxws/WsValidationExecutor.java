@@ -8,11 +8,13 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Component
 public class WsValidationExecutor {
 
     @Inject
+    @Named("validator")
     SmartValidator validator;
 
     @Inject

@@ -50,7 +50,7 @@ public class TodoClientTest {
     }
 
     @Test
-    public void createAndGetTodo() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
+    public void create() throws WsValidationException, WsBusinessException, WsResourceNotFoundException {
         //test
         Todo todo = new Todo();
         todo.setTitle("テスト");
@@ -155,6 +155,7 @@ public class TodoClientTest {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
             factoryBean.setServiceInterface(TodoService.class);
             factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/TodoWebService?WSDL"));
+//            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/service/TodoWebService.ws?wsdl"));
             factoryBean.setNamespaceUri("http://todo.jaxws.soap/");
             factoryBean.setServiceName("TodoWebService");
             factoryBean.setPortName("TodoWebPort");
