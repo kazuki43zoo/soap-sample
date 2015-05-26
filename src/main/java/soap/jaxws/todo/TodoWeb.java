@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.validation.ConstraintViolationException;
 import javax.validation.groups.Default;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class TodoWeb /*extends SpringBeanAutowiringSupport */ {
     @WebMethod
     public Todo createTodo(Todo todo) throws WsValidationException, WsBusinessException {
         try {
-            validationExecutor.execute(todo, Default.class, Todo.Create.class);
+            // Validation perform using the Method Validation of Bean Validation 1.1
             return todoService.createTodo(todo);
-        } catch (BindException e) {
+        } catch (ConstraintViolationException e) {
             throw exceptionConverter.toWsValidationException(e);
         } catch (BusinessException e) {
             throw exceptionConverter.toWsBusinessException(e);
@@ -58,6 +59,7 @@ public class TodoWeb /*extends SpringBeanAutowiringSupport */ {
     @WebMethod
     public Todo updateTodo(Todo todo) throws WsValidationException, WsResourceNotFoundException {
         try {
+            // Validation perform using the Bean Validation 1.1 via Spring SmartValidator
             validationExecutor.execute(todo, Default.class, Todo.Update.class);
             return todoService.updateTodo(todo);
         } catch (BindException e) {

@@ -12,6 +12,10 @@ import org.terasoluna.gfw.common.message.ResultMessage;
 import org.terasoluna.gfw.common.message.ResultMessages;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import java.util.Iterator;
 import java.util.Locale;
 
 @Component
@@ -42,6 +46,20 @@ public class WsExceptionConverter {
                                     error.getDefaultMessage()),
                             locale), error.getField());
 
+        }
+        return validationException;
+    }
+
+    public WsValidationException toWsValidationException(ConstraintViolationException e) {
+        WsValidationException validationException = new WsValidationException();
+        for (ConstraintViolation<?> v : e.getConstraintViolations()) {
+            Iterator<Path.Node> pathIt = v.getPropertyPath().iterator();
+            pathIt.next();
+            pathIt.next();
+            validationException.addError(
+                    v.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(),
+                    v.getMessage(),
+                    pathIt.next().toString());
         }
         return validationException;
     }
