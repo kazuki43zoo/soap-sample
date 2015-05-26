@@ -7,6 +7,10 @@ public class WsException extends Exception {
 
     private final List<WsError> errors = new ArrayList<>();
 
+    public void addError(String code, String message) {
+        addError(code, message, null);
+    }
+
     public void addError(String code, String message, String path) {
         errors.add(new WsError(code, message, path));
     }

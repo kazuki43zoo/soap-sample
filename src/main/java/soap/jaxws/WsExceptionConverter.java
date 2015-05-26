@@ -34,7 +34,7 @@ public class WsExceptionConverter {
                                     error.getCodes(),
                                     error.getArguments(),
                                     error.getDefaultMessage()),
-                            locale), null);
+                            locale));
 
         }
         for (FieldError error : e.getFieldErrors()) {
@@ -78,13 +78,14 @@ public class WsExceptionConverter {
     }
 
     private void addErrors(WsException e, ResultMessages resultMessages) {
+        Locale locale = Locale.getDefault();
         for (ResultMessage message : resultMessages) {
             e.addError(message.getCode(),
                     messageSource.getMessage(
                             message.getCode(),
                             message.getArgs(),
                             message.getText(),
-                            Locale.getDefault()), null);
+                            locale));
         }
 
     }
