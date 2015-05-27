@@ -41,12 +41,12 @@ public class WsExceptionHandlingAspect {
         WsValidationException validationException = new WsValidationException();
         for (ConstraintViolation<?> v : e.getConstraintViolations()) {
             Iterator<Path.Node> pathIt = v.getPropertyPath().iterator();
-            pathIt.next();
-            pathIt.next();
+            pathIt.next(); // method name node (skip)
+            Path.Node methodArgumentNameNode = pathIt.next();
             validationException.addError(
                     v.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(),
                     v.getMessage(),
-                    pathIt.next().toString());
+                    pathIt.hasNext() ? pathIt.next().toString() : methodArgumentNameNode.toString());
         }
         throw validationException;
     }

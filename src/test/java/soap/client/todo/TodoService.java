@@ -13,13 +13,13 @@ public interface TodoService {
 
     List<Todo> getTodos();
 
-    Todo getTodo(String todoId) throws WsResourceNotFoundException;
+    Todo getTodo(String todoId) throws WsValidationException, WsResourceNotFoundException;
 
     Todo createTodo(Todo todo) throws WsValidationException, WsBusinessException;
 
     Todo updateTodo(Todo todo) throws WsValidationException, WsResourceNotFoundException;
 
-    void deleteTodo(String todoId);
+    void deleteTodo(String todoId) throws WsValidationException;
 
     void deleteTodos();
 

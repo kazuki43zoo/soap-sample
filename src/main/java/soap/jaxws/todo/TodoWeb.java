@@ -13,6 +13,7 @@ import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class TodoWeb {
     }
 
     @WebMethod
-    public Todo getTodo(String todoId) throws WsResourceNotFoundException {
+    public Todo getTodo(@NotNull String todoId) throws WsValidationException, WsResourceNotFoundException {
         return todoService.getTodo(todoId);
     }
 
@@ -48,7 +49,7 @@ public class TodoWeb {
     }
 
     @WebMethod
-    public void deleteTodo(String todoId) {
+    public void deleteTodo(@NotNull String todoId) throws WsValidationException {
         todoService.deleteTodo(todoId);
     }
 

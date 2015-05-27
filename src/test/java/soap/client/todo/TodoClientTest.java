@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.UrlResource;
 import org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean;
@@ -136,6 +135,22 @@ public class TodoClientTest {
         }
     }
 
+    @Test
+    public void validationErrorAtMethodArgument() throws WsResourceNotFoundException {
+        // test & assert
+        try {
+            todoService.getTodo(null);
+        } catch (WsValidationException e) {
+            assertThat(e.getErrors().size(), is(1));
+            WsError error = e.getErrors().get(0);
+            assertThat(error.getCode(), is("NotNull"));
+            assertThat(error.getMessage(), is("may not be null"));
+            assertThat(error.getPath(), is("todoId"));
+        }
+
+    }
+
+
     @Test(expected = JaxWsSoapFaultException.class)
     public void systemError() throws WsValidationException, WsResourceNotFoundException {
         // test
@@ -143,7 +158,7 @@ public class TodoClientTest {
     }
 
     @Test(expected = WsResourceNotFoundException.class)
-    public void notFound() throws WsResourceNotFoundException {
+    public void notFound() throws WsResourceNotFoundException, WsValidationException {
         todoService.getTodo("aaaa");
     }
 
@@ -163,7 +178,7 @@ public class TodoClientTest {
         }
 
         @Bean
-        public static PropertySourcesPlaceholderConfigurer placeholderConfigurer(){
+        public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
             return new PropertySourcesPlaceholderConfigurer();
         }
 
