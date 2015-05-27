@@ -7,7 +7,6 @@ import soap.domain.service.todo.TodoService;
 import soap.jaxws.WsBusinessException;
 import soap.jaxws.WsResourceNotFoundException;
 import soap.jaxws.WsValidationException;
-import soap.jaxws.WsValidationExecutor;
 
 import javax.inject.Inject;
 import javax.jws.HandlerChain;
@@ -25,9 +24,6 @@ public class TodoWeb {
 
     @Inject
     TodoService todoService;
-
-    @Inject
-    WsValidationExecutor validationExecutor;
 
     @WebMethod
     public List<Todo> getTodos() {
