@@ -1,21 +1,23 @@
 package soap.jaxws.todo;
 
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindException;
-import org.terasoluna.gfw.common.exception.BusinessException;
-import org.terasoluna.gfw.common.exception.ResourceNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import soap.domain.model.Todo;
 import soap.domain.service.todo.TodoService;
-import soap.jaxws.*;
+import soap.jaxws.WsBusinessException;
+import soap.jaxws.WsResourceNotFoundException;
+import soap.jaxws.WsValidationException;
+import soap.jaxws.WsValidationExecutor;
 
 import javax.inject.Inject;
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
-import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.List;
 
+@Validated
 @Component
 @WebService
 @HandlerChain(file = "/META-INF/ws/handlers.xml")
@@ -27,9 +29,6 @@ public class TodoWeb {
     @Inject
     WsValidationExecutor validationExecutor;
 
-    @Inject
-    WsExceptionConverter exceptionConverter;
-
     @WebMethod
     public List<Todo> getTodos() {
         return todoService.getTodos();
@@ -37,36 +36,19 @@ public class TodoWeb {
 
     @WebMethod
     public Todo getTodo(String todoId) throws WsResourceNotFoundException {
-        try {
-            return todoService.getTodo(todoId);
-        } catch (ResourceNotFoundException e) {
-            throw exceptionConverter.toWsResourceNotFoundException(e);
-        }
+        return todoService.getTodo(todoId);
     }
 
+    @Validated({Default.class, Todo.Create.class})
     @WebMethod
-    public Todo createTodo(Todo todo) throws WsValidationException, WsBusinessException {
-        try {
-            // Validation perform using the Method Validation of Bean Validation 1.1
-            return todoService.createTodo(todo);
-        } catch (ConstraintViolationException e) {
-            throw exceptionConverter.toWsValidationException(e);
-        } catch (BusinessException e) {
-            throw exceptionConverter.toWsBusinessException(e);
-        }
+    public Todo createTodo(@Valid Todo todo) throws WsValidationException, WsBusinessException {
+        return todoService.createTodo(todo);
     }
 
+    @Validated({Default.class, Todo.Update.class})
     @WebMethod
-    public Todo updateTodo(Todo todo) throws WsValidationException, WsResourceNotFoundException {
-        try {
-            // Validation perform using the Bean Validation 1.1 via Spring SmartValidator
-            validationExecutor.execute(todo, Default.class, Todo.Update.class);
-            return todoService.updateTodo(todo);
-        } catch (BindException e) {
-            throw exceptionConverter.toWsValidationException(e);
-        } catch (ResourceNotFoundException e) {
-            throw exceptionConverter.toWsResourceNotFoundException(e);
-        }
+    public Todo updateTodo(@Valid Todo todo) throws WsValidationException, WsResourceNotFoundException {
+        return todoService.updateTodo(todo);
     }
 
     @WebMethod

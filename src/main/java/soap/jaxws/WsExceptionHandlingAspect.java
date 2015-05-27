@@ -1,12 +1,12 @@
 package soap.jaxws;
 
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.MessageSource;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.terasoluna.gfw.common.exception.BusinessException;
+import org.terasoluna.gfw.common.exception.ExceptionCodeResolver;
+import org.terasoluna.gfw.common.exception.ExceptionLogger;
 import org.terasoluna.gfw.common.exception.ResourceNotFoundException;
 import org.terasoluna.gfw.common.message.ResultMessage;
 import org.terasoluna.gfw.common.message.ResultMessages;
@@ -19,38 +19,25 @@ import java.util.Iterator;
 import java.util.Locale;
 
 @Component
-public class WsExceptionConverter {
+@Aspect
+public class WsExceptionHandlingAspect {
 
     @Inject
     MessageSource messageSource;
 
-    public WsValidationException toWsValidationException(BindException e) {
-        Locale locale = Locale.getDefault();
-        WsValidationException validationException = new WsValidationException();
-        for (ObjectError error : e.getGlobalErrors()) {
-            validationException.addError(error.getCode(),
-                    messageSource.getMessage(
-                            new DefaultMessageSourceResolvable(
-                                    error.getCodes(),
-                                    error.getArguments(),
-                                    error.getDefaultMessage()),
-                            locale));
+    @Inject
+    ExceptionCodeResolver exceptionCodeResolver;
 
-        }
-        for (FieldError error : e.getFieldErrors()) {
-            validationException.addError(error.getCode(),
-                    messageSource.getMessage(
-                            new DefaultMessageSourceResolvable(
-                                    error.getCodes(),
-                                    error.getArguments(),
-                                    error.getDefaultMessage()),
-                            locale), error.getField());
+    @Inject
+    ExceptionLogger exceptionLogger;
 
-        }
-        return validationException;
+    @AfterThrowing(value = "@within(javax.jws.WebService)", throwing = "e")
+    public void loggingException(Exception e) {
+        exceptionLogger.log(e);
     }
 
-    public WsValidationException toWsValidationException(ConstraintViolationException e) {
+    @AfterThrowing(value = "@within(javax.jws.WebService)", throwing = "e")
+    public void translateToWsValidationException(ConstraintViolationException e) throws WsValidationException {
         WsValidationException validationException = new WsValidationException();
         for (ConstraintViolation<?> v : e.getConstraintViolations()) {
             Iterator<Path.Node> pathIt = v.getPropertyPath().iterator();
@@ -61,20 +48,21 @@ public class WsExceptionConverter {
                     v.getMessage(),
                     pathIt.next().toString());
         }
-        return validationException;
+        throw validationException;
     }
 
-
-    public WsBusinessException toWsBusinessException(BusinessException e) {
+    @AfterThrowing(value = "@within(javax.jws.WebService)", throwing = "e")
+    public void translateToWsBusinessException(BusinessException e) throws WsBusinessException {
         WsBusinessException businessException = new WsBusinessException();
         addErrors(businessException, e.getResultMessages());
-        return businessException;
+        throw businessException;
     }
 
-    public WsResourceNotFoundException toWsResourceNotFoundException(ResourceNotFoundException e) {
+    @AfterThrowing(value = "@within(javax.jws.WebService)", throwing = "e")
+    public void translateToWsResourceNotFoundException(ResourceNotFoundException e) throws WsResourceNotFoundException {
         WsResourceNotFoundException resourceNotFoundException = new WsResourceNotFoundException();
         addErrors(resourceNotFoundException, e.getResultMessages());
-        return resourceNotFoundException;
+        throw resourceNotFoundException;
     }
 
     private void addErrors(WsException e, ResultMessages resultMessages) {

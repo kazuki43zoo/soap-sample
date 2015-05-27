@@ -37,6 +37,7 @@
                 <entry key="InvalidTransactionTokenException" value="e.xx.fw.7001"/>
                 <entry key="BusinessException" value="e.xx.fw.8001"/>
                 <entry key=".DataAccessException" value="e.xx.fw.9002"/>
+                <entry key="ConstraintViolationException" value="e.xx.fw.6001"/>
             </map>
         </property>
         <property name="defaultExceptionCode" value="e.xx.fw.9001"/>
@@ -69,9 +70,5 @@
 
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
-
-    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
-        <property name="validator" ref="validator" />
-    </bean>
 
 </beans>
