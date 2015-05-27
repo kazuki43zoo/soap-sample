@@ -7,10 +7,6 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <!--<listener>-->
-        <!--<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>-->
-    <!--</listener>-->
-
     <listener>
         <listener-class>org.terasoluna.gfw.web.logging.HttpSessionEventLoggingListener</listener-class>
     </listener>
@@ -20,9 +16,9 @@
         <param-value>
             classpath*:META-INF/spring/applicationContext.xml
             classpath*:META-INF/spring/spring-security.xml
+            classpath:META-INF/cxf/cxf.xml
         </param-value>
     </context-param>
-
 
     <filter>
         <filter-name>MDCClearFilter</filter-name>
@@ -75,7 +71,7 @@
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
+        <servlet-name>appServlet</servlet-name>
     </filter-mapping>
 
 
@@ -94,15 +90,19 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <!--<servlet>-->
-        <!--<servlet-name>wsservlet</servlet-name>-->
-        <!--<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>-->
-        <!--<load-on-startup>2</load-on-startup>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>wsservlet</servlet-name>-->
-        <!--<url-pattern>*.ws</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <servlet>
+        <servlet-name>cxfServlet</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+        <init-param>
+            <param-name>config-location</param-name>
+            <param-value>classpath:/META-INF/spring/cxf-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cxfServlet</servlet-name>
+        <url-pattern>/ws/*</url-pattern>
+    </servlet-mapping>
 
     <jsp-config>
         <jsp-property-group>

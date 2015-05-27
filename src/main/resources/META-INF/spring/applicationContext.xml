@@ -12,8 +12,6 @@
     <context:property-placeholder
             location="classpath*:/META-INF/spring/*.properties"/>
 
-    <context:component-scan base-package="soap.jaxws,soap.httpserver"/>
-
     <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
         <property name="mappingFiles"
                   value="classpath*:/META-INF/dozer/**/*-mapping.xml"/>
@@ -56,15 +54,18 @@
         <property name="exceptionLogger" ref="exceptionLogger"/>
     </bean>
 
-    <bean class="org.springframework.remoting.jaxws.SimpleHttpServerJaxWsServiceExporter">
-        <property name="port" value="8081"/>
-        <property name="filters">
-            <list>
-                <ref bean="wsXTrackFilter"/>
-                <ref bean="wsLoggingFilter"/>
-            </list>
-        </property>
-    </bean>
+    <!-- For JDK standard Web server (If use, please remove Apache CXF from dependency management in pom.xml.) -->
+    <!--<context:component-scan base-package="soap.jaxws,soap.httpserver"/>-->
+    <!--<bean class="org.springframework.remoting.jaxws.SimpleHttpServerJaxWsServiceExporter">-->
+        <!--<property name="port" value="8081"/>-->
+        <!--<property name="basePath" value="/ws/"/>-->
+        <!--<property name="filters">-->
+            <!--<list>-->
+                <!--<ref bean="wsXTrackFilter"/>-->
+                <!--<ref bean="wsLoggingFilter"/>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>

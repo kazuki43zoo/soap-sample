@@ -151,11 +151,10 @@ public class TodoClientTest {
     @TestPropertySource(locations = "test.properties")
     static class TestConfig {
         @Bean
-        public JaxWsPortProxyFactoryBean todoService(@Value("${jaxws.portNumber:8081}") String portNumber) throws IOException {
+        public JaxWsPortProxyFactoryBean todoService(@Value("${jaxws.portNumber:8080}") String portNumber) throws IOException {
             JaxWsPortProxyFactoryBean factoryBean = new JaxWsPortProxyFactoryBean();
             factoryBean.setServiceInterface(TodoService.class);
-            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/TodoWebService?WSDL"));
-//            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/service/TodoWebService.ws?wsdl"));
+            factoryBean.setWsdlDocumentResource(new UrlResource("http://localhost:" + portNumber + "/ws/TodoWebService?wsdl"));
             factoryBean.setNamespaceUri("http://todo.jaxws.soap/");
             factoryBean.setServiceName("TodoWebService");
             factoryBean.setPortName("TodoWebPort");
