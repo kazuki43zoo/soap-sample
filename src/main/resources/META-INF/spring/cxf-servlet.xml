@@ -3,6 +3,7 @@
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:soap="http://cxf.apache.org/bindings/soap"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/context
@@ -10,8 +11,7 @@
          http://cxf.apache.org/jaxws
          http://cxf.apache.org/schemas/jaxws.xsd
          http://www.springframework.org/schema/aop
-         http://www.springframework.org/schema/aop/spring-aop.xsd
-       ">
+         http://www.springframework.org/schema/aop/spring-aop.xsd http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd">
 
     <context:property-placeholder
             location="classpath*:/META-INF/spring/*.properties"/>
@@ -29,6 +29,9 @@
             id="todoWebEndpoint"
             implementor="#todoWeb"
             address="/TodoWebService">
+        <jaxws:binding>
+            <soap:soapBinding version="1.2"/>
+        </jaxws:binding>
     </jaxws:endpoint>
 
 </beans>
