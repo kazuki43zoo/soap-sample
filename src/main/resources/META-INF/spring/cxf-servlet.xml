@@ -17,13 +17,12 @@
             location="classpath*:/META-INF/spring/*.properties"/>
 
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
-        <property name="proxyTargetClass" value="true"/>
         <property name="validator" ref="validator"/>
     </bean>
 
     <context:component-scan base-package="soap.jaxws"/>
 
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:aspectj-autoproxy/>
 
     <jaxws:endpoint
             id="todoWebEndpoint"
