@@ -1,34 +1,39 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:soap="http://cxf.apache.org/bindings/soap"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context.xsd
-         http://cxf.apache.org/jaxws
-         http://cxf.apache.org/schemas/jaxws.xsd
          http://www.springframework.org/schema/aop
          http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://cxf.apache.org/jaxws
+         http://cxf.apache.org/schemas/jaxws.xsd
+         http://cxf.apache.org/bindings/soap
+         http://cxf.apache.org/schemas/configuration/soap.xsd
        ">
 
     <context:property-placeholder
             location="classpath*:/META-INF/spring/*.properties"/>
 
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
-        <property name="proxyTargetClass" value="true"/>
         <property name="validator" ref="validator"/>
     </bean>
 
     <context:component-scan base-package="soap.jaxws"/>
 
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:aspectj-autoproxy/>
 
     <jaxws:endpoint
             id="todoWebEndpoint"
             implementor="#todoWeb"
             address="/TodoWebService">
+        <jaxws:binding>
+            <soap:soapBinding version="1.2"/>
+        </jaxws:binding>
     </jaxws:endpoint>
 
 </beans>
