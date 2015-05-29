@@ -1,14 +1,43 @@
-# The Sample Application of JAX-WS with Spring Framework & the Apache CXF
+# The Sample Application of JAX-WS with Spring Framework
+
+This project provide two sample application.
+
+* Using Spring Framework + JAX-WS(Apache CXF)
+* Using Spring Framework + JAX-WS(JDK HTTP Server)
 
 ## The main framework and library
 
+This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
+
 * Spring Framework 4.1.4.RELEASE
-* JAX-WS (Apache CXF 3.0.5)
 * Bean Validation (Hibernate Validator 5.1.3.Final)
+* etc ...
 
-## Application Structure overview
+## The Sample Application using Apache CXF
 
-![alt text](./images/overview.png "Application Structure overview")
+### Additional library
+
+* JAX-WS (Apache CXF 3.0.5)
+
+### Application Structure overview
+
+![alt text](./images/cxf-overview.png "Application Structure overview using Apace CXF")
+
+
+> **Note:**
+> 
+> Details are written later ...
+
+
+## The Sample Application using JDK HTTP Server
+
+### Additional library
+
+* None
+
+### Application Structure overview
+
+![alt text](./images/jdk-overview.png "Application Structure overview using JDK HTTP Server")
 
 
 > **Note:**
