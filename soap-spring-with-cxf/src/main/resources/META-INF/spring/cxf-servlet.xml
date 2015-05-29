@@ -30,10 +30,6 @@
     <jaxws:endpoint
             id="todoWebEndpoint"
             implementor="#todoWeb"
-            address="/TodoWebService">
-        <jaxws:binding>
-            <soap:soapBinding version="1.2"/>
-        </jaxws:binding>
-    </jaxws:endpoint>
+            address="/TodoWebService" />
 
 </beans>

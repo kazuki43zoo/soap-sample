@@ -14,10 +14,13 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.validation.ConstraintViolationException;
 import javax.validation.groups.Default;
+import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.SOAPBinding;
 import java.util.List;
 
 @Component
 @WebService
+@BindingType(SOAPBinding.SOAP12HTTP_BINDING)
 @HandlerChain(file = "/META-INF/ws/handlers.xml")
 public class TodoWeb {
 
