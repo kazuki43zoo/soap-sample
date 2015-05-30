@@ -71,14 +71,14 @@ mvn clean test
 Run an application.
 
 ```console
-cd soap-spring-with-cxf
+cd soap-spring-with-jdk
 mvn clean tomcat7:run
 ```
 
 Test an application.
 
 ```console
-cd soap-spring-with-cxf
+cd soap-spring-with-jdk
 mvn clean test
 ```
 
