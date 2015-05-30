@@ -19,7 +19,7 @@ This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
 
 * JAX-WS (Apache CXF 3.0.5)
 
-> **Note:**
+> **Warning:**
 >
 > Apache CXF 3.1.0 does not work. For detail, please refer to the [CXF-6428](https://issues.apache.org/jira/browse/CXF-6428).
 
@@ -28,9 +28,26 @@ This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
 ![alt text](./images/cxf-overview.png "Application Structure overview using Apace CXF")
 
 
-> **Note:**
+> **Todo:**
 > 
 > Details are written later ...
+
+
+### Run and test an application
+
+Run an application.
+
+```console
+cd soap-spring-with-cxf
+mvn clean tomcat7:run
+```
+
+Test an application.
+
+```console
+cd soap-spring-with-cxf
+mvn clean test
+```
 
 
 ## The Sample Application using JDK HTTP Server
@@ -44,6 +61,28 @@ This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
 ![alt text](./images/jdk-overview.png "Application Structure overview using JDK HTTP Server")
 
 
-> **Note:**
+> **Todo:**
 > 
 > Details are written later ...
+
+
+### Run and test an application
+
+Run an application.
+
+```console
+cd soap-spring-with-cxf
+mvn clean tomcat7:run
+```
+
+Test an application.
+
+```console
+cd soap-spring-with-cxf
+mvn clean test
+```
+
+> **Warning:**
+> 
+> Currently, a validationErrorAtMethodArgument test is failing.
+> It's under investigation.
