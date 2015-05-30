@@ -19,6 +19,10 @@ This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
 
 * JAX-WS (Apache CXF 3.0.5)
 
+> **Note:**
+>
+> Apache CXF 3.1.0 does not work. For detail, please refer to the [CXF-6428](https://issues.apache.org/jira/browse/CXF-6428).
+
 ### Application Structure overview
 
 ![alt text](./images/cxf-overview.png "Application Structure overview using Apace CXF")
