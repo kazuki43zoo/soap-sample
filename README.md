@@ -13,6 +13,12 @@ This Sample applications use the TERASOLUNA Server Framework for Java (5.x).
 * Bean Validation (Hibernate Validator 5.1.3.Final)
 * etc ...
 
+> **Note:**
+>
+> In this application, depends on lombok for automatically generate a methods(getter/setter/etc ...) of JavaBean.
+> **If you are use IDE as Eclispe or STS(Spring Tool Suite) or IDEA or NetBeans, please  install lombok.jar to the IED. In detail of how to install, please see [here](http://jnb.ociweb.com/jnb/jnbJan2010.html#installation).** (If IDEA , please install lombok plugin)
+
+
 ## The Sample Application using Apache CXF
 
 ### Additional library
